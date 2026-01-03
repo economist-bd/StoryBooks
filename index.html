@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>২০ পাতার গল্পের বই</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS স্টাইল --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #e8dcc5;
+            background-image: repeating-linear-gradient(45deg, #e0d2b8 0px, #e0d2b8 2px, #e8dcc5 2px, #e8dcc5 8px);
+            font-family: 'Patrick Hand', 'Hind Siliguri', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .book-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            min-height: 750px;
+        }
+
+        .story-page {
+            background: #fffcf5;
+            padding: 40px 40px 60px 60px; /* নিচে বাটন থাকার কারণে প্যাডিং একটু বেশি */
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.15);
+            height: 100%;
+            min-height: 750px;
+            position: relative;
+            
+            /* খাতার রুল করা দাগ এবং ছেঁড়া ইফেক্ট */
+            background-image: 
+                linear-gradient(90deg, transparent 15px, #fffcf5 15px),
+                repeating-linear-gradient(#e5e5e5 0 1px, transparent 1px 100%);
+            background-size: 100% 100%, 100% 30px;
+            background-position: 0 0, 0 40px;
+            background-repeat: no-repeat, repeat;
+            
+            /* বাম পাশে ছেঁড়া ডিজাইন */
+            clip-path: polygon(
+                15px 0%, 100% 0%, 100% 100%, 15px 100%,
+                0% 95%, 15px 90%, 0% 85%, 15px 80%, 
+                0% 75%, 15px 70%, 0% 65%, 15px 60%, 
+                0% 55%, 15px 50%, 0% 45%, 15px 40%, 
+                0% 35%, 15px 30%, 0% 25%, 15px 20%, 
+                0% 15%, 15px 10%, 0% 5%
+            );
+            transition: transform 0.3s ease-in-out, opacity 0.3s;
+        }
+
+        /* কন্টেন্ট এরিয়া */
+        .content-area {
+            line-height: 30px;
+            color: #2c3e50;
+            min-height: 550px; /* ফিক্সড হাইট যাতে পেজ ছোট বড় না হয় */
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #d35400;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #d35400;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* নেভিগেশন বাটন */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #aaa;
+        }
+
+        button {
+            background: #ff7043;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px 5px 25px 5px; /* একটু বাঁকা স্টাইল */
+            cursor: pointer;
+            font-family: 'Hind Siliguri', sans-serif;
+            font-size: 1rem;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #d84315;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .page-number {
+            font-weight: bold;
+            color: #777;
+        }
+
+        /* লেখক পরিচিতি - শুধু প্রথম বা শেষ পাতায় দেখানোর জন্য */
+        .author-box {
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+            color: #555;
+        }
+
+        /* মোবাইল রেসপন্সিভ */
+        @media (max-width: 600px) {
+            .story-page {
+                padding: 30px 20px 30px 35px;
+                clip-path: polygon(
+                    10px 0%, 100% 0%, 100% 100%, 10px 100%,
+                    0% 95%, 10px 90%, 0% 85%, 10px 80%, 
+                    0% 75%, 10px 70%, 0% 65%, 10px 60%, 
+                    0% 55%, 10px 50%, 0% 45%, 10px 40%, 
+                    0% 35%, 10px 30%, 0% 25%, 10px 20%, 
+                    0% 15%, 10px 10%, 0% 5%
+                );
+            }
+            h1 { font-size: 1.6rem; }
+            p { font-size: 1rem; line-height: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="book-container">
+        <div class="story-page" id="pageElement">
+            <div class="content-area">
+                <div style="text-align: center;">
+                    <h1 id="storyTitle">গল্পের শিরোনাম</h1>
+                </div>
+                <div id="storyText">
+                    </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button id="prevBtn" onclick="changePage(-1)">&#8592; আগের পাতা</button>
+                <span class="page-number" id="pageIndicator">পাতা ১ / ২০</span>
+                <button id="nextBtn" onclick="changePage(1)">পরের পাতা &#8594;</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- গল্পের ডাটাবেস (এখানে আপনি আপনার গল্প লিখবেন) ---
+        // প্রতিটি {} ব্লকের মধ্যে এক একটি পাতার তথ্য আছে।
+        const storyPages = [
+            {
+                title: "জীবনের লক্ষ্য",
+                text: `<p>অনেক দিন আগের কথা। এক ছোট গ্রামে বাস করত এক যুবক নাম তার রফিক। রফিকের খুব ইচ্ছা ছিল জীবনে বড় হওয়ার। কিন্তু সে জানত না কিভাবে শুরু করতে হয়।</p>
+                       <p>সে প্রতিদিন নদীর তীরে বসে ভাবত, "আমার জীবনের উদ্দেশ্য কী? আমি কি শুধু এই গ্রামেই জীবন কাটিয়ে দেব?"</p>
+                       <div class="author-box">- মো. মঞ্জুরুল হক<br>অর্থনীতি প্রভাষক</div>`
+            },
+            {
+                title: "অজানার পথে",
+                text: `<p>একদিন সকালে রফিক সিদ্ধান্ত নিল সে গ্রাম ছেড়ে শহরে যাবে। তার বাবা-মা তাকে অনেক বোঝালেন, কিন্তু রফিকের জেদ ছিল অটুট।</p>
+                       <p>সে তার ছোট একটি ব্যাগে কিছু কাপড় আর মায়ের হাতের তৈরি পিঠা নিয়ে বেরিয়ে পড়ল। মাটির রাস্তা ধরে হাঁটতে হাঁটতে সে ভাবছিল সামনের দিনগুলোর কথা।</p>`
+            },
+            {
+                title: "শহরের জঞ্জাল",
+                text: `<p>শহরে পৌঁছে রফিক দেখল চারদিকে শুধু মানুষ আর মানুষ। এত বড় দালানকোঠা সে আগে কখনো দেখেনি।</p>
+                       <p>কিন্তু সমস্যা হলো থাকার জায়গা নিয়ে। হাতে টাকা নেই, অচেনা শহর। সে বুঝল জীবনটা গল্পের বইয়ের মতো সহজ নয়।</p>`
+            },
+            // এখানে ৪ থেকে ১৯ নম্বর পাতা পর্যন্ত লুপের মাধ্যমে ডামি টেক্সট দেওয়া হলো।
+            // আপনি এই অংশগুলো আপনার নিজের গল্প দিয়ে রিপ্লেস করবেন।
+            ...Array.from({ length: 16 }, (_, i) => ({
+                title: `অধ্যায় ${i + 4}: সংগ্রামের দিনগুলো`,
+                text: `<p>এই পাতায় গল্পের ${i + 4} তম অংশের বর্ণনা থাকবে। রফিকের জীবনের নানা চড়াই-উতরাই এখানে লেখা হবে।</p>
+                       <p>সে পরিশ্রম করতে থাকল। কখনো হোটে্লে কাজ করল, কখনো রিকশা গ্যারেজে। কিন্তু তার পড়াশোনার প্রতি টান কমেনি।</p>
+                       <p>রাতে ল্যাম্পপোস্টের আলোয় সে বই পড়ত। অর্থনীতি আর সমাজবিজ্ঞান ছিল তার প্রিয় বিষয়।</p>`
+            })),
+            {
+                title: "সাফল্যের দেখা",
+                text: `<p>অবশেষে দীর্ঘ পরিশ্রমের পর রফিক তার লক্ষ্যে পৌঁছাল। সে আজ একজন সফল উদ্যোক্তা।</p>
+                       <p>সে তার গ্রামে ফিরে এল এবং একটি স্কুল প্রতিষ্ঠা করল। রফিক বিশ্বাস করত, "ইচ্ছা থাকলে উপায় হয়।"</p>
+                       <p style="text-align:center; font-weight:bold; margin-top:50px;">-- সমাপ্ত --</p>`
+            }
+        ];
+
+        let currentPage = 0; // বর্তমান পাতা (শুরু ০ থেকে)
+
+        // এলিমেন্টগুলো সিলেক্ট করা
+        const titleEl = document.getElementById('storyTitle');
+        const textEl = document.getElementById('storyText');
+        const pageIndEl = document.getElementById('pageIndicator');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageElement = document.getElementById('pageElement');
+
+        // পাতা লোড করার ফাংশন
+        function loadPage(index) {
+            // এনিমেশন ইফেক্ট (ফেড আউট)
+            pageElement.style.opacity = 0;
+            pageElement.style.transform = "rotateY(-5deg)";
+
+            setTimeout(() => {
+                const pageData = storyPages[index];
+                titleEl.innerHTML = pageData.title;
+                textEl.innerHTML = pageData.text;
+                pageIndEl.innerText = `পাতা ${index + 1} / ${storyPages.length}`;
+
+                // বাটন এনাবল/ডিজেবল লজিক
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === storyPages.length - 1;
+
+                // এনিমেশন ইফেক্ট (ফেড ইন)
+                pageElement.style.opacity = 1;
+                pageElement.style.transform = "rotateY(0deg)";
+            }, 300);
+        }
+
+        // বাটন ক্লিকের ফাংশন
+        function changePage(direction) {
+            const newPage = currentPage + direction;
+            if (newPage >= 0 && newPage < storyPages.length) {
+                currentPage = newPage;
+                loadPage(currentPage);
+            }
+        }
+
+        // শুরুতে প্রথম পাতা লোড করা
+        loadPage(currentPage);
+
+    </script>
+</body>
+</html>
